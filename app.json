@@ -5,6 +5,9 @@
       "bundler": "metro"
     },
     "name": "ijust",
-    "slug": "ijust"
+    "slug": "ijust",
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
