@@ -18,7 +18,7 @@ export const saveItemsToStorage = async (item: any, app_name: string) => {
   }
 };
 
-const removeFromAsyncStorage = async (key) => {
+export const removeFromAsyncStorage = async (key) => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (error) {
@@ -26,10 +26,7 @@ const removeFromAsyncStorage = async (key) => {
   }
 };
 
-
-const fetchAllItems = () => {}
-
-async function fetchAllItemsStartingWith<T>(startsWith: string): Promise<T[]> {
+export async function fetchAllItemsStartingWith<T>(startsWith: string): Promise<T[]> {
     try {
         const filteredKeys = (await AsyncStorage.getAllKeys()).filter((item) => item.startsWith(startsWith)
         );

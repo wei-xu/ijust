@@ -10,25 +10,26 @@ import {
 import checkinButton from "../components/checkinButton";
 import { CheckinButtonData } from "../model/checkinButtonData";
 import { saveItemsToStorage } from "../db/db_ops";
+import { APP_NAME } from "../config/setup";
 
 const ShortcutsScreen = (props) => {
   const [checkinButtons, setCheckinButtons] = useState([]);
-  const { test, new_checkin } = useLocalSearchParams<{
-    new_checkin: string;
-    test: string;
+  const { typed_obj, new_checkin_button } = useLocalSearchParams<{
+    new_checkin_button: string;
+    typed_obj: string; // prone to error if only string is accepted
   }>();
 
   useEffect(() => {
-    console.log("new checkin button added: ", new_checkin);
+    console.log("new checkin button added: ", new_checkin_button);
 
-    const deser: CheckinButtonData = JSON.parse(new_checkin)
+    const deser: CheckinButtonData = JSON.parse(new_checkin_button)
 
-    saveItemsToStorage(deser, "ijust")
+    saveItemsToStorage(deser, APP_NAME)
 
     setCheckinButtons(prev => {
       return [...prev, deser]
     })
-  }, [new_checkin]);
+  }, [new_checkin_button]);
 
   const shortcuts = [
     { text: "Shortcut 1", color: "#FF6384" },
