@@ -10,9 +10,32 @@ import { componentWidth } from "../config/layout";
 import { router, useNavigation } from "expo-router";
 import CheckInButton from "../components/checkinButton";
 import { CheckinButtonData } from "../model/checkinButtonData";
+import { saveItemsToStorage } from "../db/db_ops";
+import { APP_NAME, BUTTON_VERSION } from "../config/setup";
+import { v4 as uuidv4 } from "uuid";
 const AddCheckinButton = () => {
   const n = useNavigation();
   const [checkinText, setCheckinText] = React.useState("");
+
+  const handleAddButton = () => {
+    const newCheckinButton = {
+      id: uuidv4(),
+      message: checkinText,
+      created_at: Date.now(),
+      version: BUTTON_VERSION,
+      color: null,
+    } as CheckinButtonData;
+    const newCheckinButtonSer = JSON.stringify(newCheckinButton);
+
+    // saveItemsToStorage(newCheckinButton, APP_NAME);
+    router.push({
+      pathname: "/",
+      params: {
+        typed_obj: "teststring",
+        new_checkin_button: newCheckinButtonSer,
+      },
+    });
+  };
 
   return (
     <View>
@@ -26,24 +49,7 @@ const AddCheckinButton = () => {
         }}
         textAlignVertical="bottom" // don't know what this does
       />
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() =>
-          router.push({
-            pathname: "/",
-            params: {
-              test: "teststring",
-              new_checkin: JSON.stringify({
-                id: "1",
-                message: "teststring",
-                created_at: Date.now(),
-                version: 1,
-                color: null,
-              } as CheckinButtonData),
-            },
-          })
-        }
-      >
+      <TouchableOpacity style={styles.addButton} onPress={handleAddButton}>
         <Text style={styles.addButtonText}>Add</Text>
       </TouchableOpacity>
     </View>

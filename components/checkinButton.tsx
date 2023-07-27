@@ -22,8 +22,7 @@ const CheckInButton = ({ item }) => {
     <TouchableOpacity
       style={[
         styles.checkinButton,
-        { backgroundColor: item.color, width: componentWidth },
-        // { height: Math.max(item.text.length * 2, itemWidth / 4) }, // Adjust the height based on the text length
+        { backgroundColor: item.color, width: componentWidth }, // what if color is null
       ]}
       onPress={() => handleShortcutPress(item.text)}
     >

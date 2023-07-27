@@ -12,3 +12,8 @@ npx create-expo-app -e with-router
 
 - [Expo Router: Docs](https://expo.github.io/router)
 - [Expo Router: Repo](https://github.com/expo/router)
+
+# Ijust development
+
+## todo
+- passing params between pages can only be string | string []?
