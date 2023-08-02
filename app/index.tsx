@@ -1,58 +1,37 @@
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import checkinButton from "../components/checkinButton";
-import { CheckinButtonData } from "../model/checkinButtonData";
-import { saveItemsToStorage } from "../db/db_ops";
+import renderCheckInButton from "../components/checkinButton";
 import { APP_NAME } from "../config/setup";
+import {
+  fetchAllItemsStartingWith,
+  removeAllFromAsyncStorage,
+  saveItemsToStorage,
+} from "../db/db_ops";
+import { CheckinButtonData } from "../model/checkinButtonData";
 
 const ShortcutsScreen = (props) => {
-  const [checkinButtons, setCheckinButtons] = useState([]);
-  const { typed_obj, new_checkin_button } = useLocalSearchParams<{
+  const [checkinButtons, setCheckinButtons] = useState<CheckinButtonData[]>([]);
+  const { new_checkin_button } = useLocalSearchParams<{
     new_checkin_button: string;
-    typed_obj: string; // prone to error if only string is accepted
+    typed_obj: string;
   }>();
 
   useEffect(() => {
-    console.log("new checkin button added: ", new_checkin_button);
-
-    const deser: CheckinButtonData = JSON.parse(new_checkin_button)
-
-    saveItemsToStorage(deser, APP_NAME)
-
-    setCheckinButtons(prev => {
-      return [...prev, deser]
-    })
+    console.log("use effect getting executed");
+    console.log("new_checking_button: ", new_checkin_button)
+    fetchAllItemsStartingWith<CheckinButtonData>(
+      `app-${APP_NAME}`,
+      setCheckinButtons
+    );
   }, [new_checkin_button]);
-
-  const shortcuts = [
-    { text: "Shortcut 1", color: "#FF6384" },
-    {
-      text: "Shortcut 2 is a super long text and it may go beyond what's defined for the size of the button. Shortcut 2 is a super long text and it may go beyond what's defined for the size of the button",
-      color: "#36A2EB",
-    },
-    { text: "Shortcut 3", color: "#FFCE56" },
-    { text: "Shortcut 4", color: "#FEC888" },
-    { text: "Shortcut 1", color: "#FF6384" },
-    { text: "Shortcut 2", color: "#36A2EB" },
-    { text: "Shortcut 3", color: "#FFCE56" },
-    { text: "Shortcut 4", color: "#FEC888" },
-    { text: "Shortcut 1", color: "#FF6384" },
-    { text: "Shortcut 2", color: "#36A2EB" },
-    { text: "Shortcut 3", color: "#FFCE56" },
-    { text: "Shortcut 4", color: "#FEC888" },
-    { text: "Shortcut 1", color: "#FF6384" },
-    { text: "Shortcut 2", color: "#36A2EB" },
-    { text: "Shortcut 3", color: "#FFCE56" },
-    // { text: "Shortcut 4", color: "#FEC888" },
-    // Add more shortcuts as needed
-  ];
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,12 +47,15 @@ const ShortcutsScreen = (props) => {
               <Text>{"Add"}</Text>
             </TouchableOpacity>
           ),
+          headerLeft: () => (
+            <Button title="Delete All" onPress={removeAllFromAsyncStorage} />
+          ),
         }}
       />
       <FlatList
-        data={shortcuts}
-        renderItem={checkinButton}
-        keyExtractor={(item, index) => index.toString()}
+        data={checkinButtons}
+        renderItem={(item) => renderCheckInButton(item, setCheckinButtons)}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.container}
       />
     </View>

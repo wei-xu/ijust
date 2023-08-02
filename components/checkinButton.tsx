@@ -1,16 +1,12 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { router, useRouter } from "expo-router";
 import React from "react";
-import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { componentWidth } from "../config/layout";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { removeFromAsyncStorage } from "../db/db_ops";
 
-const CheckInButton = ({ item }) => {
-  const router = useRouter();
+const renderCheckInButton = (item, setter) => {
+  const checkinButton = item.item;
 
   const handleShortcutPress = (shortcutText) => {
     // Handle the shortcut press here
@@ -22,16 +18,29 @@ const CheckInButton = ({ item }) => {
     <TouchableOpacity
       style={[
         styles.checkinButton,
-        { backgroundColor: item.color, width: componentWidth }, // what if color is null
+        { backgroundColor: "orange", width: componentWidth }, // what if color is null
       ]}
-      onPress={() => handleShortcutPress(item.text)}
+      onPress={() => handleShortcutPress(checkinButton.message)}
     >
-      <Text style={styles.checkinButtonText}>{item.text}</Text>
+      <Text style={styles.checkinButtonText}>{checkinButton.message}</Text>
+
+      <TouchableOpacity
+        onPress={() => {
+          console.log("delete checkinButton: ", checkinButton);
+          removeFromAsyncStorage(checkinButton.id, setter);
+        }}
+      >
+        <MaterialCommunityIcons
+          name="delete-forever-outline"
+          size={24}
+          color="black"
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };
 
-export default CheckInButton;
+export default renderCheckInButton;
 
 const styles = StyleSheet.create({
   checkinButton: {
@@ -42,11 +51,13 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginBottom: 16,
     padding: 16,
+    flexDirection: "row",
   },
   checkinButtonText: {
     fontSize: 18,
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+    flex: 1,
   },
 });

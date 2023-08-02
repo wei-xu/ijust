@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CheckinButtonData } from "../model/checkinButtonData";
+import { APP_NAME } from "../config/setup";
 
 /**
  *
@@ -8,32 +9,58 @@ import { CheckinButtonData } from "../model/checkinButtonData";
  */
 export const saveItemsToStorage = async (item: any, app_name: string) => {
   try {
-    await AsyncStorage.setItem(
-      `app-${app_name}-${item["id"]}`,
-      JSON.stringify(item)
-    );
-    console.log("save items to storage: ", item);
+    const key = `app-${APP_NAME}-${item["id"]}`;
+
+    if ((await AsyncStorage.getItem(key)) == null) {
+      await AsyncStorage.setItem(key, JSON.stringify(item));
+      console.log("save items to storage: ", item);
+    } else {
+      console.log("key found in storage, skipping...");
+    }
   } catch (error) {
     console.log("Error saving items:", error);
   }
 };
 
-export const removeFromAsyncStorage = async (key) => {
+export const removeFromAsyncStorage = async (key, setter) => {
   try {
-    await AsyncStorage.removeItem(key);
+    await AsyncStorage.removeItem(`app-${APP_NAME}-${key}`);
+
+    setter((prev) => {
+      return prev.filter((item) => item.id != key);
+    });
   } catch (error) {
     console.log("Error removing from storage for key ", key, error);
   }
 };
 
-export async function fetchAllItemsStartingWith<T>(startsWith: string): Promise<T[]> {
-    try {
-        const filteredKeys = (await AsyncStorage.getAllKeys()).filter((item) => item.startsWith(startsWith)
-        );
-        const storedItems = await AsyncStorage.multiGet(filteredKeys);
-        
-        return storedItems.map(([k, v]) => JSON.parse(v) as T);
-    } catch (error) {
-        console.log("Error retrieving checklist items:", error);
+export const removeAllFromAsyncStorage = async () => {
+  try {
+    const allKeys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.multiRemove(allKeys);
+    console.log("Deleted all keys from AsyncStorage");
+  } catch (error) {
+    console.log("Error remove all keys from storage");
+  }
+};
+
+export async function fetchAllItemsStartingWith<T>(
+  startsWith: string = `app-${APP_NAME}`,
+  setter
+): Promise<T[]> {
+  try {
+    const filteredKeys = (await AsyncStorage.getAllKeys()).filter((item) =>
+      item.startsWith(startsWith)
+    );
+    const storedItems = await AsyncStorage.multiGet(filteredKeys);
+
+    const itemList = storedItems.map(([k, v]) => JSON.parse(v) as T);
+
+    if (setter) {
+      setter(itemList);
     }
+    return itemList;
+  } catch (error) {
+    console.log("Error retrieving checklist items:", error);
+  }
 }

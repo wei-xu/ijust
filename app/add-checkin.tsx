@@ -12,14 +12,14 @@ import CheckInButton from "../components/checkinButton";
 import { CheckinButtonData } from "../model/checkinButtonData";
 import { saveItemsToStorage } from "../db/db_ops";
 import { APP_NAME, BUTTON_VERSION } from "../config/setup";
-import { v4 as uuidv4 } from "uuid";
+import uuid from "react-native-uuid";
 const AddCheckinButton = () => {
-  const n = useNavigation();
+
   const [checkinText, setCheckinText] = React.useState("");
 
   const handleAddButton = () => {
     const newCheckinButton = {
-      id: uuidv4(),
+      id: uuid.v4(),
       message: checkinText,
       created_at: Date.now(),
       version: BUTTON_VERSION,
