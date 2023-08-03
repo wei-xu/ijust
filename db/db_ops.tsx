@@ -7,20 +7,28 @@ import { APP_NAME } from "../config/setup";
  * @param item an object with a unique id
  * @param app_name app_name to be stored, may be redundant
  */
-export const saveItemsToStorage = async (item: any, app_name: string) => {
+export async function saveItemsToStorage(
+  item: any,
+  prefix: string,
+  itemAppender?
+): Promise<Boolean> {
   try {
-    const key = `app-${APP_NAME}-${item["id"]}`;
+    const key = `${prefix}-${item["id"]}`;
 
     if ((await AsyncStorage.getItem(key)) == null) {
       await AsyncStorage.setItem(key, JSON.stringify(item));
       console.log("save items to storage: ", item);
+      itemAppender((prev) => [...prev, item]);
+      return true;
     } else {
       console.log("key found in storage, skipping...");
+      return false;
     }
   } catch (error) {
     console.log("Error saving items:", error);
+    return false;
   }
-};
+}
 
 export const removeFromAsyncStorage = async (key, setter) => {
   try {

@@ -1,18 +1,19 @@
-import { router, useRouter } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { componentWidth } from "../config/layout";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { removeFromAsyncStorage } from "../db/db_ops";
 
 const renderCheckInButton = (item, setter) => {
   const checkinButton = item.item;
 
-  const handleShortcutPress = (shortcutText) => {
+  function handleShortcutPress(shortcutText) {
     // Handle the shortcut press here
     console.log("Shortcut pressed:", shortcutText);
+
     router.push("/detail");
-  };
+  }
 
   return (
     <TouchableOpacity

@@ -1,40 +1,41 @@
+import { router } from "expo-router";
 import React from "react";
 import {
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  View,
-  Text,
+  View
 } from "react-native";
-import { componentWidth } from "../config/layout";
-import { router, useNavigation } from "expo-router";
-import CheckInButton from "../components/checkinButton";
-import { CheckinButtonData } from "../model/checkinButtonData";
-import { saveItemsToStorage } from "../db/db_ops";
-import { APP_NAME, BUTTON_VERSION } from "../config/setup";
 import uuid from "react-native-uuid";
-const AddCheckinButton = () => {
-
+import { componentWidth } from "../config/layout";
+import { BUTTON_VERSION } from "../config/setup";
+import { CheckinButtonData } from "../model/checkinButtonData";
+const AddCheckinButton = ({ route }) => {
   const [checkinText, setCheckinText] = React.useState("");
 
+  console.log("route: ", route);
   const handleAddButton = () => {
-    const newCheckinButton = {
-      id: uuid.v4(),
-      message: checkinText,
-      created_at: Date.now(),
-      version: BUTTON_VERSION,
-      color: null,
-    } as CheckinButtonData;
-    const newCheckinButtonSer = JSON.stringify(newCheckinButton);
+    if (checkinText.trim() == "") {
+      console.log("validate failed: empty content");
+    } else {
+      const newCheckinButton = {
+        id: uuid.v4(),
+        message: checkinText,
+        created_at: Date.now(),
+        version: BUTTON_VERSION,
+        color: null,
+      } as CheckinButtonData;
+      const newCheckinButtonSer = JSON.stringify(newCheckinButton);
 
-    // saveItemsToStorage(newCheckinButton, APP_NAME);
-    router.push({
-      pathname: "/",
-      params: {
-        typed_obj: "teststring",
-        new_checkin_button: newCheckinButtonSer,
-      },
-    });
+      router.push({
+        pathname: "/",
+        params: {
+          typed_obj: "teststring",
+          new_checkin_button: newCheckinButtonSer,
+        },
+      });
+    }
   };
 
   return (

@@ -5,3 +5,8 @@ export type CheckinButtonData = {
     version: number,
     color: string // hex string
 }
+
+export type CheckinData = {
+    button_id: string,
+    checkin_timestamp: number
+}

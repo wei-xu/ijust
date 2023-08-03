@@ -1,4 +1,4 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -19,19 +19,31 @@ import { CheckinButtonData } from "../model/checkinButtonData";
 
 const ShortcutsScreen = (props) => {
   const [checkinButtons, setCheckinButtons] = useState<CheckinButtonData[]>([]);
-  const { new_checkin_button } = useLocalSearchParams<{
+
+  const params = useLocalSearchParams<{
     new_checkin_button: string;
     typed_obj: string;
   }>();
 
   useEffect(() => {
     console.log("use effect getting executed");
-    console.log("new_checking_button: ", new_checkin_button)
-    fetchAllItemsStartingWith<CheckinButtonData>(
-      `app-${APP_NAME}`,
-      setCheckinButtons
-    );
-  }, [new_checkin_button]);
+
+    if (params?.new_checkin_button) {
+      console.log("new button added");
+      const newCheckinButton: CheckinButtonData = JSON.parse(
+        params.new_checkin_button
+      );
+
+      saveItemsToStorage(newCheckinButton, `app-${APP_NAME}`, setCheckinButtons);
+    } else {
+      console.log("initializing screen");
+      // initialize screen
+      fetchAllItemsStartingWith<CheckinButtonData>(
+        `app-${APP_NAME}`,
+        setCheckinButtons
+      );
+    }
+  }, [params?.new_checkin_button]);
 
   return (
     <View style={{ flex: 1 }}>

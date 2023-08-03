@@ -1,12 +1,16 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
 import { Calendar } from "react-native-calendars";
-import moment from "moment"
+import moment from "moment";
+import { useLocalSearchParams } from "expo-router";
 
-const DetailScreen = () => {
-    const currentDs = moment().format("YYYY-MM-DD");
-    const [selected, setSelected] = useState(currentDs);
-    
+const DetailScreen = (props) => {
+  console.log("logging screen props, ", props);
+  const params = useLocalSearchParams();
+  console.log("params, ", params);
+  const currentDs = moment().format("YYYY-MM-DD");
+  const [selected, setSelected] = useState(currentDs);
+
   const markedDates = {
     // Marking the past 3 days
     "2023-07-14": { marked: true, dotColor: "red" },
@@ -24,6 +28,7 @@ const DetailScreen = () => {
           console.log("selected day", day);
         }}
       />
+      <Text>something below</Text>
     </View>
   );
 };
