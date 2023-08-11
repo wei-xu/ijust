@@ -7,6 +7,6 @@ export type CheckinButtonData = {
 }
 
 export type CheckinData = {
-    button_id: string,
+    id: string, // this is button id from CheckinButtonData
     checkin_timestamp: number
 }

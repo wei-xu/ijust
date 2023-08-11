@@ -1,18 +1,29 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { componentWidth } from "../config/layout";
-import { removeFromAsyncStorage } from "../db/db_ops";
+import { APP_NAME } from "../config/setup";
+import { saveItemsToStorageWithKey } from "../db/db_ops";
+import { CheckinData } from "../model/checkinButtonData";
 
 const renderCheckInButton = (item, setter) => {
   const checkinButton = item.item;
 
   function handleShortcutPress(shortcutText) {
     // Handle the shortcut press here
+    // record the checkin activity
     console.log("Shortcut pressed:", shortcutText);
 
-    router.push("/detail");
+    // log check in time
+    const checkinTime = Date.now();
+    saveItemsToStorageWithKey(
+      {
+        id: checkinButton.id,
+        checkin_timestamp: checkinTime,
+      } as CheckinData,
+      `app-${APP_NAME}-checkin-${checkinButton.id}-${checkinTime}`
+    );
   }
 
   return (
@@ -27,15 +38,19 @@ const renderCheckInButton = (item, setter) => {
 
       <TouchableOpacity
         onPress={() => {
-          console.log("delete checkinButton: ", checkinButton);
-          removeFromAsyncStorage(checkinButton.id, setter);
+          // removeFromAsyncStorage(checkinButton.id, setter);
+          router.push({
+            pathname: "/detail",
+            params: { id: checkinButton.id },
+          });
         }}
       >
-        <MaterialCommunityIcons
+        {/* <MaterialCommunityIcons
           name="delete-forever-outline"
           size={24}
           color="black"
-        />
+        /> */}
+        <AntDesign name="calendar" size={24} color="black" />
       </TouchableOpacity>
     </TouchableOpacity>
   );

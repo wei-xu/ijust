@@ -13,7 +13,8 @@ import { APP_NAME } from "../config/setup";
 import {
   fetchAllItemsStartingWith,
   removeAllFromAsyncStorage,
-  saveItemsToStorage,
+  saveItemsToStorageWithPrefix,
+  
 } from "../db/db_ops";
 import { CheckinButtonData } from "../model/checkinButtonData";
 
@@ -34,7 +35,7 @@ const ShortcutsScreen = (props) => {
         params.new_checkin_button
       );
 
-      saveItemsToStorage(newCheckinButton, `app-${APP_NAME}`, setCheckinButtons);
+      saveItemsToStorageWithPrefix(newCheckinButton, `app-${APP_NAME}-buttons`, setCheckinButtons);
     } else {
       console.log("initializing screen");
       // initialize screen

@@ -1,24 +1,40 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CheckinButtonData } from "../model/checkinButtonData";
 import { APP_NAME } from "../config/setup";
 
 /**
  *
- * @param item an object with a unique id
- * @param app_name app_name to be stored, may be redundant
+ * @param item object to store
+ * @param prefix prefix of key, will be appended by -item["id"]
+ * @param itemAppender update a react state
+ * @returns
  */
-export async function saveItemsToStorage(
+export async function saveItemsToStorageWithPrefix(
   item: any,
   prefix: string,
   itemAppender?
+) {
+  return saveItemsToStorageWithKey(
+    item,
+    `${prefix}-${item["id"]}`,
+    itemAppender
+  );
+}
+
+export async function saveItemsToStorageWithKey(
+  item: any,
+  key?: string,
+  itemAppender?
 ): Promise<Boolean> {
   try {
-    const key = `${prefix}-${item["id"]}`;
-
     if ((await AsyncStorage.getItem(key)) == null) {
       await AsyncStorage.setItem(key, JSON.stringify(item));
       console.log("save items to storage: ", item);
-      itemAppender((prev) => [...prev, item]);
+
+      if (itemAppender) {
+        itemAppender((prev) => [...prev, item]);
+      } else {
+        console.log("no item appender");
+      }
       return true;
     } else {
       console.log("key found in storage, skipping...");
@@ -30,17 +46,20 @@ export async function saveItemsToStorage(
   }
 }
 
-export const removeFromAsyncStorage = async (key, setter) => {
+export const removeFromAsyncStorage = async (key, setter?) => {
   try {
     await AsyncStorage.removeItem(`app-${APP_NAME}-${key}`);
 
-    setter((prev) => {
-      return prev.filter((item) => item.id != key);
-    });
+    if (setter) {
+      setter((prev) => {
+        return prev.filter((item) => item.id != key);
+      });
+    }
   } catch (error) {
     console.log("Error removing from storage for key ", key, error);
   }
 };
+
 
 export const removeAllFromAsyncStorage = async () => {
   try {
@@ -54,7 +73,7 @@ export const removeAllFromAsyncStorage = async () => {
 
 export async function fetchAllItemsStartingWith<T>(
   startsWith: string = `app-${APP_NAME}`,
-  setter
+  setter?
 ): Promise<T[]> {
   try {
     const filteredKeys = (await AsyncStorage.getAllKeys()).filter((item) =>
