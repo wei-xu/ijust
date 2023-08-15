@@ -40,7 +40,7 @@ const ShortcutsScreen = (props) => {
       console.log("initializing screen");
       // initialize screen
       fetchAllItemsStartingWith<CheckinButtonData>(
-        `app-${APP_NAME}`,
+        `app-${APP_NAME}-buttons`,
         setCheckinButtons
       );
     }

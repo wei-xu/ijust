@@ -16,6 +16,7 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
-- set up db
+- order checkin activities by time
+- set up db ?
 - record pressing with storage/sql
 - passing params between pages can only be string | string []?
