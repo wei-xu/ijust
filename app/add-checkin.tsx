@@ -5,16 +5,20 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import uuid from "react-native-uuid";
+import ColorPicker from "../components/ColorPicker";
 import { componentWidth } from "../config/layout";
 import { BUTTON_VERSION } from "../config/setup";
 import { CheckinButtonData } from "../model/checkinButtonData";
-const AddCheckinButton = ({ route }) => {
-  const [checkinText, setCheckinText] = React.useState("");
 
-  console.log("route: ", route);
+const AddCheckinButton = (props) => {
+  const [checkinText, setCheckinText] = React.useState("");
+  const [selectedColor, setSelectedColor] = React.useState<string>("#FF5733");
+
+  console.log("logging props: ", props);
+
   const handleAddButton = () => {
     if (checkinText.trim() == "") {
       console.log("validate failed: empty content");
@@ -24,7 +28,7 @@ const AddCheckinButton = ({ route }) => {
         message: checkinText,
         created_at: Date.now(),
         version: BUTTON_VERSION,
-        color: null,
+        color: selectedColor,
       } as CheckinButtonData;
       const newCheckinButtonSer = JSON.stringify(newCheckinButton);
 
@@ -53,6 +57,10 @@ const AddCheckinButton = ({ route }) => {
       <TouchableOpacity style={styles.addButton} onPress={handleAddButton}>
         <Text style={styles.addButtonText}>Add</Text>
       </TouchableOpacity>
+      <ColorPicker
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+      />
     </View>
   );
 };

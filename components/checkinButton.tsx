@@ -10,6 +10,27 @@ import { CheckinData } from "../model/checkinButtonData";
 const renderCheckInButton = (item, setter) => {
   const checkinButton = item.item;
 
+  /**
+   *
+   * @param backgroundColor input color in hex format
+   * @returns
+   */
+  const getTextColor = (backgroundColor: string) => {
+    if (backgroundColor == null) {
+      return "black";
+    }
+    // Convert the hexadecimal color to RGB components
+    const r = parseInt(backgroundColor.slice(1, 3), 16);
+    const g = parseInt(backgroundColor.slice(3, 5), 16);
+    const b = parseInt(backgroundColor.slice(5, 7), 16);
+
+    // Calculate the brightness using the YIQ formula
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+    // Determine the appropriate text color based on brightness
+    return brightness >= 128 ? "black" : "white";
+  };
+
   function handleShortcutPress(shortcutText) {
     // Handle the shortcut press here
     // record the checkin activity
@@ -30,11 +51,18 @@ const renderCheckInButton = (item, setter) => {
     <TouchableOpacity
       style={[
         styles.checkinButton,
-        { backgroundColor: "orange", width: componentWidth }, // what if color is null
+        {
+          backgroundColor: checkinButton.color == null ? "orange" : checkinButton.color,
+          width: componentWidth,
+        }, // what if color is null
       ]}
       onPress={() => handleShortcutPress(checkinButton.message)}
     >
-      <Text style={styles.checkinButtonText}>{checkinButton.message}</Text>
+      <Text
+        style={[styles.checkinButtonText, { color: getTextColor(checkinButton.color) }]}
+      >
+        {checkinButton.message}
+      </Text>
 
       <TouchableOpacity
         onPress={() => {
@@ -71,7 +99,7 @@ const styles = StyleSheet.create({
   },
   checkinButtonText: {
     fontSize: 18,
-    color: "white",
+    // color: "white",
     fontWeight: "bold",
     textAlign: "center",
     flex: 1,

@@ -21,6 +21,7 @@ npx create-expo-app -e with-router
 - color picker for new check in buttons
 - [done] calendar mark up with checked-in activities
 - deletion button in detail page
+- taking notes when checking in
 - manage button in main page
 - [done] order checkin activities by time -- done with sort state
 - set up db ?
