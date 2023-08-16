@@ -16,7 +16,13 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
-- order checkin activities by time
+- minimum 1 hour check-in guard
+- (animated?) response feedback after click the button
+- color picker for new check in buttons
+- [done] calendar mark up with checked-in activities
+- deletion button in detail page
+- manage button in main page
+- [done] order checkin activities by time -- done with sort state
 - set up db ?
 - record pressing with storage/sql
 - passing params between pages can only be string | string []?

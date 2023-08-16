@@ -22,7 +22,7 @@ const DetailScreen = (props) => {
   const params = useLocalSearchParams();
   console.log("params, ", params);
   const currentDs = moment().format("YYYY-MM-DD");
-  const [selected, setSelected] = useState(currentDs);
+  const [markedDates, setMarkedDates] = useState({});
 
   const [checkinActivities, setCheckinActivities] = useState<CheckinData[]>([]);
 
@@ -40,14 +40,30 @@ const DetailScreen = (props) => {
       res.sort((a, b) => {
         return b.checkin_timestamp - a.checkin_timestamp;
       });
-      
+
       setCheckinActivities(res);
+
+      // truncate the res to date level
+      const truncatedDates = res.map((item) => {
+        return moment(item.checkin_timestamp).format("YYYY-MM-DD");
+      })
+
+      // convert truncated dates to object in this format { "date": { marked: true } }
+      const uniqueDates = truncatedDates.reduce((acc, cur) => {
+        acc[cur] = { marked: true, dotColor: "red" };
+        return acc;
+      }, {});
+
+      console.log("unique dates: ", uniqueDates);
+
+      setMarkedDates(uniqueDates);
+
     });
   }, []);
 
   console.log("checkin activities: ", checkinActivities);
 
-  const markedDates = {
+  const marked = {
     // Marking the past 3 days
     "2023-07-14": { marked: true, dotColor: "red" },
     "2023-07-15": { marked: true, dotColor: "red" },
@@ -80,7 +96,7 @@ const DetailScreen = (props) => {
       <Calendar
         markedDates={markedDates}
         // Add other props you may need
-        enableSwipeMonths
+        enableSwipeMonths={true}
         onDayPress={(day) => {
           console.log("selected day", day);
         }}
