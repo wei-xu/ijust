@@ -18,7 +18,7 @@ npx create-expo-app -e with-router
 ## todo
 - minimum 1 hour check-in guard
 - (animated?) response feedback after click the button
-- color picker for new check in buttons
+- [done] color picker for new check in buttons
 - [done] calendar mark up with checked-in activities
 - deletion button in detail page
 - taking notes when checking in
@@ -26,4 +26,5 @@ npx create-expo-app -e with-router
 - [done] order checkin activities by time -- done with sort state
 - set up db ?
 - record pressing with storage/sql
-- passing params between pages can only be string | string []?
+- [takeaway] passing params between pages can only be string | string []?
+- enhance color picker
