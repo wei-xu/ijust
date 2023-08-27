@@ -17,12 +17,15 @@ npx create-expo-app -e with-router
 
 ## todo
 - minimum 1 hour check-in guard
-- (animated?) response feedback after click the button
+- [done] response feedback after click the button
+- animation
+- locate to exact checkin activities when clicking calendar
 - [done] color picker for new check in buttons
 - [done] calendar mark up with checked-in activities
 - deletion button in detail page
+- delete activity by swiping left
 - taking notes when checking in
-- manage button in main page
+- “manage" button in main page
 - [done] order checkin activities by time -- done with sort state
 - set up db ?
 - record pressing with storage/sql
