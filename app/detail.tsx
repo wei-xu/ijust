@@ -46,7 +46,7 @@ const DetailScreen = (props) => {
       // truncate the res to date level
       const truncatedDates = res.map((item) => {
         return moment(item.checkin_timestamp).format("YYYY-MM-DD");
-      })
+      });
 
       // convert truncated dates to object in this format { "date": { marked: true } }
       const uniqueDates = truncatedDates.reduce((acc, cur) => {
@@ -57,18 +57,10 @@ const DetailScreen = (props) => {
       console.log("unique dates: ", uniqueDates);
 
       setMarkedDates(uniqueDates);
-
     });
   }, []);
 
   console.log("checkin activities: ", checkinActivities);
-
-  const marked = {
-    // Marking the past 3 days
-    "2023-07-14": { marked: true, dotColor: "red" },
-    "2023-07-15": { marked: true, dotColor: "red" },
-    "2023-07-16": { marked: true, dotColor: "red" },
-  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -117,9 +109,7 @@ const DetailScreen = (props) => {
         contentContainerStyle={styles.container}
         ListEmptyComponent={() => (
           <View>
-            <Link href="/add-checkin">
-              <Text>List Empty, Click to browse items</Text>
-            </Link>
+            <Text>No activities found</Text>
           </View>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

@@ -1,4 +1,9 @@
-import { Stack, router, useLocalSearchParams, useNavigation } from "expo-router";
+import {
+  Stack,
+  router,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -8,15 +13,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import renderCheckInButton from "../components/checkinButton";
 import { APP_NAME } from "../config/setup";
 import {
   fetchAllItemsStartingWith,
   removeAllFromAsyncStorage,
   saveItemsToStorageWithPrefix,
-  
 } from "../db/db_ops";
 import { CheckinButtonData } from "../model/checkinButtonData";
+import CheckinButton from "../components/CheckinButton";
 
 const ShortcutsScreen = (props) => {
   const [checkinButtons, setCheckinButtons] = useState<CheckinButtonData[]>([]);
@@ -35,7 +39,12 @@ const ShortcutsScreen = (props) => {
         params.new_checkin_button
       );
 
-      saveItemsToStorageWithPrefix(newCheckinButton, `app-${APP_NAME}-buttons`, setCheckinButtons);
+      // todo remove setCheckinButtons logic out of this function
+      saveItemsToStorageWithPrefix(
+        newCheckinButton,
+        `app-${APP_NAME}-buttons`,
+        setCheckinButtons
+      );
     } else {
       console.log("initializing screen");
       // initialize screen
@@ -67,7 +76,7 @@ const ShortcutsScreen = (props) => {
       />
       <FlatList
         data={checkinButtons}
-        renderItem={(item) => renderCheckInButton(item, setCheckinButtons)}
+        renderItem={(item) => <CheckinButton item={item} />}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.container}
       />

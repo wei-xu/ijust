@@ -1,14 +1,19 @@
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { componentWidth } from "../config/layout";
 import { APP_NAME } from "../config/setup";
 import { saveItemsToStorageWithKey } from "../db/db_ops";
-import { CheckinData } from "../model/checkinButtonData";
+import { CheckinButtonData, CheckinData } from "../model/checkinButtonData";
+import { Feather } from "@expo/vector-icons";
 
-const renderCheckInButton = (item, setter) => {
-  const checkinButton = item.item;
+const CheckInButton = ({ item }) => {
+  console.log("rendering checkin button: ", item);
+
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
+
+  const checkinButton = item.item as CheckinButtonData;
 
   /**
    *
@@ -31,11 +36,16 @@ const renderCheckInButton = (item, setter) => {
     return brightness >= 128 ? "black" : "white";
   };
 
-  function handleShortcutPress(shortcutText) {
+  function handleCheckinPress(shortcutText) {
     // Handle the shortcut press here
     // record the checkin activity
     console.log("Shortcut pressed:", shortcutText);
 
+    if (isCheckingIn) {
+      return;
+    }
+
+    setIsCheckingIn(true);
     // log check in time
     const checkinTime = Date.now();
     saveItemsToStorageWithKey(
@@ -45,46 +55,71 @@ const renderCheckInButton = (item, setter) => {
       } as CheckinData,
       `app-${APP_NAME}-checkin-${checkinButton.id}-${checkinTime}`
     );
+
+    // maintain isCheckingIn state for 5 second
+    setTimeout(() => {
+      setIsCheckingIn(false);
+    }, 5000);
   }
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.checkinButton,
-        {
-          backgroundColor: checkinButton.color == null ? "orange" : checkinButton.color,
-          width: componentWidth,
-        }, // what if color is null
-      ]}
-      onPress={() => handleShortcutPress(checkinButton.message)}
-    >
-      <Text
-        style={[styles.checkinButtonText, { color: getTextColor(checkinButton.color) }]}
+    <View>
+      <Pressable
+        style={[
+          styles.checkinButton,
+          {
+            backgroundColor:
+              checkinButton.color == null ? "orange" : checkinButton.color,
+            width: componentWidth,
+          },
+        ]}
+        onPress={() => handleCheckinPress(checkinButton.message)}
+        disabled={isCheckingIn}
       >
-        {checkinButton.message}
-      </Text>
+        <View style={styles.checkinButtonContent}>
+          {isCheckingIn ? (
+            <Feather name="check-circle" size={24} color="black" />
+          ) : (
+            <Text
+              style={[
+                styles.checkinButtonText,
+                { color: getTextColor(checkinButton.color) },
+              ]}
+            >
+              {checkinButton.message}
+            </Text>
+          )}
+        </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          // removeFromAsyncStorage(checkinButton.id, setter);
-          router.push({
-            pathname: "/detail",
-            params: { id: checkinButton.id },
-          });
-        }}
-      >
-        {/* <MaterialCommunityIcons
-          name="delete-forever-outline"
-          size={24}
-          color="black"
-        /> */}
-        <AntDesign name="calendar" size={24} color="black" />
-      </TouchableOpacity>
-    </TouchableOpacity>
+        <Pressable
+          onPress={() => {
+            // removeFromAsyncStorage(checkinButton.id, setter);
+            router.push({
+              pathname: "/detail",
+              params: { id: checkinButton.id },
+            });
+          }}
+        >
+          <AntDesign name="calendar" size={24} color="black" />
+        </Pressable>
+      </Pressable>
+      {/* <View style={styles.inputView}>
+        <TextInput
+          style={styles.noteInput}
+          value={checkinText}
+          autoComplete="off"
+          onChangeText={(text) => {
+            console.log("changing text: ", text);
+            setCheckinText(text);
+          }}
+        />
+        <Button title="OK" onPress={() => setIsCheckingIn(false)} />
+      </View> */}
+    </View>
   );
 };
 
-export default renderCheckInButton;
+export default CheckInButton;
 
 const styles = StyleSheet.create({
   checkinButton: {
@@ -103,5 +138,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     flex: 1,
+  },
+  checkinButtonContent: {
+    flex: 1,
+    flexDirection: "row",
+    // alignItems: "center",
+    justifyContent: "center",
+  },
+  noteInput: {
+    fontSize: 16,
+    color: "grey",
+    textAlign: "center",
+    flex: 1,
+    borderColor: "black",
+  },
+  inputView: {
+    flexDirection: "row",
   },
 });
