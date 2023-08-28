@@ -16,6 +16,8 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
+- Details page reset to no activities every time
+- Pressable has no click effect
 - minimum 1 hour check-in guard
 - [done] response feedback after click the button
 - animation

@@ -1,24 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { APP_NAME } from "../config/setup";
-
-/**
- *
- * @param item object to store
- * @param prefix prefix of key, will be appended by -item["id"]
- * @param itemAppender update a react state
- * @returns
- */
-export async function saveItemsToStorageWithPrefix(
-  item: any,
-  prefix: string,
-  itemAppender?
-) {
-  return saveItemsToStorageWithKey(
-    item,
-    `${prefix}-${item["id"]}`,
-    itemAppender
-  );
-}
 
 export async function saveItemsToStorageWithKey(
   item: any,
@@ -28,7 +8,7 @@ export async function saveItemsToStorageWithKey(
   try {
     if ((await AsyncStorage.getItem(key)) == null) {
       await AsyncStorage.setItem(key, JSON.stringify(item));
-      console.log("save items to storage: ", item);
+      // console.log("save items to storage: ", item);
 
       if (itemAppender) {
         itemAppender((prev) => [...prev, item]);
@@ -48,7 +28,7 @@ export async function saveItemsToStorageWithKey(
 
 export const removeFromAsyncStorage = async (key, setter?) => {
   try {
-    await AsyncStorage.removeItem(`app-${APP_NAME}-${key}`);
+    await AsyncStorage.removeItem(key);
 
     if (setter) {
       setter((prev) => {
@@ -60,19 +40,38 @@ export const removeFromAsyncStorage = async (key, setter?) => {
   }
 };
 
+// remove one item from storage
+export const removeItemFromAsyncStorage = async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+    console.log("removed item from storage for key ", key);
+  } catch (error) {
+    console.log("Error removing from storage for key ", key, error);
+  }
+};
+
+// remove all keys with prefix from storage
+export const removeAllFromAsyncStorageWithPrefix = async (prefix: string) => {
+  try {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const filteredKeys = allKeys.filter((item) => item.startsWith(prefix));
+    await AsyncStorage.multiRemove(filteredKeys);
+  } catch (error) {
+    console.log(`Error remove all keys with prefix ${prefix} from storage`);
+  }
+};
 
 export const removeAllFromAsyncStorage = async () => {
   try {
     const allKeys = await AsyncStorage.getAllKeys();
     await AsyncStorage.multiRemove(allKeys);
-    console.log("Deleted all keys from AsyncStorage");
   } catch (error) {
     console.log("Error remove all keys from storage");
   }
 };
 
 export async function fetchAllItemsStartingWith<T>(
-  startsWith: string = `app-${APP_NAME}`,
+  startsWith: string,
   setter?
 ): Promise<T[]> {
   try {

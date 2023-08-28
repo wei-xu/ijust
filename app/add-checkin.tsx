@@ -35,7 +35,6 @@ const AddCheckinButton = (props) => {
       router.push({
         pathname: "/",
         params: {
-          typed_obj: "teststring",
           new_checkin_button: newCheckinButtonSer,
         },
       });

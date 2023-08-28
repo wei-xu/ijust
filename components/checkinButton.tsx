@@ -1,16 +1,13 @@
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { componentWidth } from "../config/layout";
 import { APP_NAME } from "../config/setup";
 import { saveItemsToStorageWithKey } from "../db/db_ops";
 import { CheckinButtonData, CheckinData } from "../model/checkinButtonData";
-import { Feather } from "@expo/vector-icons";
 
 const CheckInButton = ({ item }) => {
-  console.log("rendering checkin button: ", item);
-
   const [isCheckingIn, setIsCheckingIn] = useState(false);
 
   const checkinButton = item.item as CheckinButtonData;
@@ -53,7 +50,7 @@ const CheckInButton = ({ item }) => {
         id: checkinButton.id,
         checkin_timestamp: checkinTime,
       } as CheckinData,
-      `app-${APP_NAME}-checkin-${checkinButton.id}-${checkinTime}`
+      `checkin-${checkinButton.id}-${checkinTime}`
     );
 
     // maintain isCheckingIn state for 5 second

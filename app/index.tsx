@@ -1,8 +1,7 @@
 import {
   Stack,
   router,
-  useLocalSearchParams,
-  useNavigation,
+  useLocalSearchParams
 } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -13,47 +12,46 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { APP_NAME } from "../config/setup";
+import CheckinButton from "../components/CheckinButton";
 import {
   fetchAllItemsStartingWith,
   removeAllFromAsyncStorage,
-  saveItemsToStorageWithPrefix,
+  saveItemsToStorageWithKey
 } from "../db/db_ops";
 import { CheckinButtonData } from "../model/checkinButtonData";
-import CheckinButton from "../components/CheckinButton";
 
 const ShortcutsScreen = (props) => {
-  const [checkinButtons, setCheckinButtons] = useState<CheckinButtonData[]>([]);
+  console.log("logging screen props, ", props);
+    const [checkinButtons, setCheckinButtons] = useState<CheckinButtonData[]>([]);
 
   const params = useLocalSearchParams<{
     new_checkin_button: string;
-    typed_obj: string;
+    button_deleted: string;
   }>();
 
   useEffect(() => {
     console.log("use effect getting executed");
 
     if (params?.new_checkin_button) {
-      console.log("new button added");
       const newCheckinButton: CheckinButtonData = JSON.parse(
         params.new_checkin_button
       );
 
       // todo remove setCheckinButtons logic out of this function
-      saveItemsToStorageWithPrefix(
+      saveItemsToStorageWithKey(
         newCheckinButton,
-        `app-${APP_NAME}-buttons`,
+        `buttons-${newCheckinButton.id}`,
         setCheckinButtons
       );
     } else {
       console.log("initializing screen");
       // initialize screen
       fetchAllItemsStartingWith<CheckinButtonData>(
-        `app-${APP_NAME}-buttons`,
+        `buttons`,
         setCheckinButtons
       );
     }
-  }, [params?.new_checkin_button]);
+  }, [params?.new_checkin_button, params?.button_deleted]);
 
   return (
     <View style={{ flex: 1 }}>

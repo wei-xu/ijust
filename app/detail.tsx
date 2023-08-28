@@ -1,27 +1,20 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { Calendar } from "react-native-calendars";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
-import { Link, Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Calendar } from "react-native-calendars";
+import { APP_NAME } from "../config/setup";
 import {
   fetchAllItemsStartingWith,
-  removeFromAsyncStorage,
+  removeAllFromAsyncStorageWithPrefix,
+  removeItemFromAsyncStorage,
 } from "../db/db_ops";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { APP_NAME } from "../config/setup";
 import { CheckinData } from "../model/checkinButtonData";
 
 const DetailScreen = (props) => {
   console.log("logging screen props, ", props);
   const params = useLocalSearchParams();
-  console.log("params, ", params);
-  const currentDs = moment().format("YYYY-MM-DD");
   const [markedDates, setMarkedDates] = useState({});
 
   const [checkinActivities, setCheckinActivities] = useState<CheckinData[]>([]);
@@ -30,12 +23,10 @@ const DetailScreen = (props) => {
 
   useEffect(() => {
     const activities = fetchAllItemsStartingWith<CheckinData>(
-      `app-${APP_NAME}-checkin-${checkinButtonId}`
+      `checkin-${checkinButtonId}`
     );
 
     activities.then((res) => {
-      console.log("fetched activities: ", res);
-
       // sort the res by timestamp in descending order
       res.sort((a, b) => {
         return b.checkin_timestamp - a.checkin_timestamp;
@@ -54,13 +45,30 @@ const DetailScreen = (props) => {
         return acc;
       }, {});
 
-      console.log("unique dates: ", uniqueDates);
-
       setMarkedDates(uniqueDates);
     });
   }, []);
 
-  console.log("checkin activities: ", checkinActivities);
+  const handleDeleteButton = async () => {
+    console.log("deleting button");
+    // remove the activities from storage
+    await removeAllFromAsyncStorageWithPrefix(
+      `checkin-${checkinButtonId}`
+    );
+
+    // remove the buttons from storage
+    // removeItemFromAsyncStorage(`buttons-${checkinButtonId}`);
+    await removeAllFromAsyncStorageWithPrefix(`buttons-${checkinButtonId}`);
+    
+    console.log("deleted the button");
+
+    router.push({
+      pathname: "/",
+      params: {
+        button_deleted: true,
+      },
+    });
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,19 +76,13 @@ const DetailScreen = (props) => {
         options={{
           headerRight: () => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  // todo: remove button and its activities
-                  // removeFromAsyncStorage(checkinButtonId);
-                  console.log("deleting(not implemented): ");
-                }}
-              >
+              <Pressable onPress={handleDeleteButton}>
                 <MaterialCommunityIcons
                   name="delete-forever-outline"
                   size={24}
                   color="black"
                 />
-              </TouchableOpacity>
+              </Pressable>
             );
           },
         }}
