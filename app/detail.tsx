@@ -4,11 +4,9 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { APP_NAME } from "../config/setup";
 import {
   fetchAllItemsStartingWith,
-  removeAllFromAsyncStorageWithPrefix,
-  removeItemFromAsyncStorage,
+  removeAllFromAsyncStorageWithPrefix
 } from "../db/db_ops";
 import { CheckinData } from "../model/checkinButtonData";
 

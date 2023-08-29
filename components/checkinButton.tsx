@@ -3,14 +3,13 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { componentWidth } from "../config/layout";
-import { APP_NAME } from "../config/setup";
 import { saveItemsToStorageWithKey } from "../db/db_ops";
 import { CheckinButtonData, CheckinData } from "../model/checkinButtonData";
 
-const CheckInButton = ({ item }) => {
+const CheckInButton = ({ item, drag, isActive }) => {
   const [isCheckingIn, setIsCheckingIn] = useState(false);
 
-  const checkinButton = item.item as CheckinButtonData;
+  const checkinButton = item as CheckinButtonData;
 
   /**
    *
@@ -70,8 +69,9 @@ const CheckInButton = ({ item }) => {
             width: componentWidth,
           },
         ]}
+        onLongPress={drag}
         onPress={() => handleCheckinPress(checkinButton.message)}
-        disabled={isCheckingIn}
+        disabled={isCheckingIn || isActive}
       >
         <View style={styles.checkinButtonContent}>
           {isCheckingIn ? (

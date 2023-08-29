@@ -16,6 +16,8 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
+- save ordering after user drags and re-order the list
+- [done] added re-organize / re-order flatlist
 - Details page reset to no activities every time
 - Pressable has no click effect
 - minimum 1 hour check-in guard
@@ -24,7 +26,7 @@ npx create-expo-app -e with-router
 - locate to exact checkin activities when clicking calendar
 - [done] color picker for new check in buttons
 - [done] calendar mark up with checked-in activities
-- deletion button in detail page
+- [done] deletion button in detail page
 - delete activity by swiping left
 - taking notes when checking in
 - “manage" button in main page
