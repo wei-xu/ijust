@@ -1,28 +1,19 @@
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import DraggableFlatList from "react-native-draggable-flatlist";
 import CheckinButton from "../components/CheckinButton";
 import {
-  fetchAllItemsStartingWith,
+  fetchAllItemsFromStorageWithKeys,
+  fetchItemFromStorage,
   removeAllFromAsyncStorage,
   saveItemsToStorageWithKey,
 } from "../db/db_ops";
 import { CheckinButtonData } from "../model/checkinButtonData";
-import DraggableFlatList from "react-native-draggable-flatlist";
 
 const ShortcutsScreen = (props) => {
   console.log("logging screen props, ", props);
   const [checkinButtons, setCheckinButtons] = useState<CheckinButtonData[]>([]);
-
-  // store the ids of the checkin buttons of the latest order
-  const [orderedButtonList, setOrderedButtonList] = useState([]);
 
   const params = useLocalSearchParams<{
     new_checkin_button: string;
@@ -32,30 +23,59 @@ const ShortcutsScreen = (props) => {
   useEffect(() => {
     console.log("use effect getting executed");
 
+    const initializeButtons = async () => {
+      const orderedIds = await fetchItemFromStorage<string[]>(
+        "main-screen-ordered-button-id-list"
+      );
+
+      if (orderedIds == null) {
+        console.log("no buttons found");
+        return;
+      }
+
+      const buttons = await fetchAllItemsFromStorageWithKeys<CheckinButtonData>(
+        orderedIds.map((id) => `buttons-${id}`)
+      );
+
+      setCheckinButtons(buttons);
+    };
+
+    const handleNewButton = async (newCheckinButton: CheckinButtonData) => {
+      const saveItemSuccess = await saveItemsToStorageWithKey(
+        newCheckinButton,
+        `buttons-${newCheckinButton.id}`
+      );
+      // todo what if save item to storage failed?
+
+      // add the new button to the top of the list
+      // and save the ordered button list into storage
+
+      const saveOrderButtonIdListSuccess = await saveItemsToStorageWithKey(
+        [newCheckinButton.id, ...checkinButtons.map((item) => item.id)],
+        "main-screen-ordered-button-id-list",
+        "overwrite"
+      );
+
+      if (saveItemSuccess && saveOrderButtonIdListSuccess) {
+        setCheckinButtons((prev) => {
+          return [newCheckinButton, ...prev];
+        });
+      } else {
+        console.log("failed to save new button to storage");
+      }
+    };
+
     if (params?.new_checkin_button) {
       const newCheckinButton: CheckinButtonData = JSON.parse(
         params.new_checkin_button
       );
-
-      // todo remove setCheckinButtons logic out of this function
-      saveItemsToStorageWithKey(
-        newCheckinButton,
-        `buttons-${newCheckinButton.id}`,
-        setCheckinButtons
-      );
+      handleNewButton(newCheckinButton);
     } else {
       console.log("initializing screen");
-      // initialize screen
-      fetchAllItemsStartingWith<CheckinButtonData>(
-        `buttons`,
-        setCheckinButtons
-      );
+
+      initializeButtons();
     }
   }, [params?.new_checkin_button, params?.button_deleted]);
-
-  useEffect(() => {
-    console.log("saving updated check in button list into storage");
-  }, [checkinButtons]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -83,7 +103,14 @@ const ShortcutsScreen = (props) => {
         )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.container}
-        onDragEnd={({ data }) => setCheckinButtons(data)}
+        onDragEnd={({ data }) => {
+          setCheckinButtons(data);
+          saveItemsToStorageWithKey(
+            data.map((item) => item.id),
+            "main-screen-ordered-button-id-list",
+            "overwrite"
+          );
+        }}
       />
     </View>
   );

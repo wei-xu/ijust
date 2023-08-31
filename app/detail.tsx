@@ -6,7 +6,9 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import {
   fetchAllItemsStartingWith,
-  removeAllFromAsyncStorageWithPrefix
+  fetchItemFromStorage,
+  removeAllFromAsyncStorageWithPrefix,
+  saveItemsToStorageWithKey,
 } from "../db/db_ops";
 import { CheckinData } from "../model/checkinButtonData";
 
@@ -48,24 +50,35 @@ const DetailScreen = (props) => {
   }, []);
 
   const handleDeleteButton = async () => {
-    console.log("deleting button");
-    // remove the activities from storage
-    await removeAllFromAsyncStorageWithPrefix(
-      `checkin-${checkinButtonId}`
+    // get order button id list
+    const orderedIds = await fetchItemFromStorage<string[]>(
+      "main-screen-ordered-button-id-list"
     );
 
-    // remove the buttons from storage
-    // removeItemFromAsyncStorage(`buttons-${checkinButtonId}`);
-    await removeAllFromAsyncStorageWithPrefix(`buttons-${checkinButtonId}`);
-    
-    console.log("deleted the button");
+    const deleteSuccess = await saveItemsToStorageWithKey(
+      orderedIds.filter((id) => id != checkinButtonId),
+      "main-screen-ordered-button-id-list",
+      "overwrite"
+    );
 
-    router.push({
-      pathname: "/",
-      params: {
-        button_deleted: true,
-      },
-    });
+    if (deleteSuccess) {
+      console.log("deleting button");
+      // remove the activities from storage
+      await removeAllFromAsyncStorageWithPrefix(`checkin-${checkinButtonId}`);
+
+      // remove the buttons from storage
+      // removeItemFromAsyncStorage(`buttons-${checkinButtonId}`);
+      await removeAllFromAsyncStorageWithPrefix(`buttons-${checkinButtonId}`);
+
+      console.log("deleted the button");
+
+      router.push({
+        pathname: "/",
+        params: {
+          button_deleted: true,
+        },
+      });
+    }
   };
 
   return (
