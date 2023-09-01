@@ -2,7 +2,6 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { componentWidth } from "../config/layout";
 import { saveItemsToStorageWithKey } from "../db/db_ops";
 import { CheckinButtonData, CheckinData } from "../model/checkinButtonData";
 
@@ -59,14 +58,14 @@ const CheckInButton = ({ item, drag, isActive }) => {
   }
 
   return (
-    <View>
+    <View style={styles.listItemContainer}>
       <Pressable
         style={[
-          styles.checkinButton,
+          styles.checkinButtonContainer,
           {
             backgroundColor:
               checkinButton.color == null ? "orange" : checkinButton.color,
-            width: componentWidth,
+            // width: componentWidth,
           },
         ]}
         onLongPress={drag}
@@ -87,31 +86,19 @@ const CheckInButton = ({ item, drag, isActive }) => {
             </Text>
           )}
         </View>
-
-        <Pressable
-          onPress={() => {
-            // removeFromAsyncStorage(checkinButton.id, setter);
-            router.push({
-              pathname: "/detail",
-              params: { id: checkinButton.id },
-            });
-          }}
-        >
-          <AntDesign name="calendar" size={24} color="black" />
-        </Pressable>
       </Pressable>
-      {/* <View style={styles.inputView}>
-        <TextInput
-          style={styles.noteInput}
-          value={checkinText}
-          autoComplete="off"
-          onChangeText={(text) => {
-            console.log("changing text: ", text);
-            setCheckinText(text);
-          }}
-        />
-        <Button title="OK" onPress={() => setIsCheckingIn(false)} />
-      </View> */}
+      <Pressable
+      style={styles.calenderIcon}
+        onPress={() => {
+          // removeFromAsyncStorage(checkinButton.id, setter);
+          router.push({
+            pathname: "/detail",
+            params: { id: checkinButton.id },
+          });
+        }}
+      >
+        <AntDesign name="calendar" size={24} color="black" />
+      </Pressable>
     </View>
   );
 };
@@ -119,37 +106,34 @@ const CheckInButton = ({ item, drag, isActive }) => {
 export default CheckInButton;
 
 const styles = StyleSheet.create({
-  checkinButton: {
+  listItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkinButtonContainer: {
     // aspectRatio: 4,
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "flex-start",
-    marginBottom: 16,
+    marginVertical: 8,
     padding: 16,
     flexDirection: "row",
-  },
-  checkinButtonText: {
-    fontSize: 18,
-    // color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
     flex: 1,
   },
   checkinButtonContent: {
-    flex: 1,
+    // flex: 1,
     flexDirection: "row",
-    // alignItems: "center",
     justifyContent: "center",
+    minHeight: 24,
   },
-  noteInput: {
-    fontSize: 16,
-    color: "grey",
+  checkinButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
     textAlign: "center",
-    flex: 1,
-    borderColor: "black",
   },
-  inputView: {
-    flexDirection: "row",
+  calenderIcon: {
+    marginLeft: 8,
+    alignContent: "center",
   },
 });

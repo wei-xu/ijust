@@ -16,7 +16,8 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
-- save ordering after user drags and re-order the list
+- long press reordering animation feedback
+- [done] save ordering after user drags and re-order the list
 - [done] added re-organize / re-order flatlist
 - Details page reset to no activities every time
 - Pressable has no click effect

@@ -118,7 +118,8 @@ const ShortcutsScreen = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   addButton: {
     marginRight: 8,
