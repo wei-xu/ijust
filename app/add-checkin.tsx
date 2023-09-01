@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import uuid from "react-native-uuid";
-import ColorPicker from "../components/ColorPicker";
+import ColorPicker from "../components/color-picker";
 import { componentWidth } from "../config/layout";
 import { BUTTON_VERSION } from "../config/setup";
 import { CheckinButtonData } from "../model/checkinButtonData";

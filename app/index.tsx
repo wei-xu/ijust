@@ -2,7 +2,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
-import CheckinButton from "../components/CheckinButton";
+import CheckinButton from "../components/checkin-button";
 import {
   fetchAllItemsFromStorageWithKeys,
   fetchItemFromStorage,
