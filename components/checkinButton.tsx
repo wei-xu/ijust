@@ -90,7 +90,6 @@ const CheckInButton = ({ item, drag, isActive }) => {
       <Pressable
       style={styles.calenderIcon}
         onPress={() => {
-          // removeFromAsyncStorage(checkinButton.id, setter);
           router.push({
             pathname: "/detail",
             params: { id: checkinButton.id },
