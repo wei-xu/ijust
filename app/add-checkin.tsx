@@ -48,7 +48,6 @@ const AddCheckinButton = (props) => {
         value={checkinText}
         autoComplete="off"
         onChangeText={(text) => {
-          //   console.log("changing text: ", text);
           setCheckinText(text);
         }}
         textAlignVertical="bottom" // don't know what this does
