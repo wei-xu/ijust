@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { saveItemsToStorageWithKey } from "../db/db_ops";
 import { CheckinButtonData, CheckinData } from "../model/checkinButtonData";
+import { ScaleDecorator } from "react-native-draggable-flatlist";
 
 const CheckInButton = ({ item, drag, isActive }) => {
   const [isCheckingIn, setIsCheckingIn] = useState(false);
@@ -58,47 +59,49 @@ const CheckInButton = ({ item, drag, isActive }) => {
   }
 
   return (
-    <View style={styles.listItemContainer}>
-      <Pressable
-        style={[
-          styles.checkinButtonContainer,
-          {
-            backgroundColor:
-              checkinButton.color == null ? "orange" : checkinButton.color,
-            // width: componentWidth,
-          },
-        ]}
-        onLongPress={drag}
-        onPress={() => handleCheckinPress(checkinButton.message)}
-        disabled={isCheckingIn || isActive}
-      >
-        <View style={styles.checkinButtonContent}>
-          {isCheckingIn ? (
-            <Feather name="check-circle" size={24} color="black" />
-          ) : (
-            <Text
-              style={[
-                styles.checkinButtonText,
-                { color: getTextColor(checkinButton.color) },
-              ]}
-            >
-              {checkinButton.message}
-            </Text>
-          )}
-        </View>
-      </Pressable>
-      <Pressable
-      style={styles.calenderIcon}
-        onPress={() => {
-          router.push({
-            pathname: "/detail",
-            params: { id: checkinButton.id },
-          });
-        }}
-      >
-        <AntDesign name="calendar" size={24} color="black" />
-      </Pressable>
-    </View>
+    <ScaleDecorator>
+      <View style={styles.listItemContainer}>
+        <Pressable
+          style={[
+            styles.checkinButtonContainer,
+            {
+              backgroundColor:
+                checkinButton.color == null ? "orange" : checkinButton.color,
+              // width: componentWidth,
+            },
+          ]}
+          onLongPress={drag}
+          onPress={() => handleCheckinPress(checkinButton.message)}
+          disabled={isCheckingIn || isActive}
+        >
+          <View style={styles.checkinButtonContent}>
+            {isCheckingIn ? (
+              <Feather name="check-circle" size={24} color="black" />
+            ) : (
+              <Text
+                style={[
+                  styles.checkinButtonText,
+                  { color: getTextColor(checkinButton.color) },
+                ]}
+              >
+                {checkinButton.message}
+              </Text>
+            )}
+          </View>
+        </Pressable>
+        <Pressable
+          style={styles.calenderIcon}
+          onPress={() => {
+            router.push({
+              pathname: "/detail",
+              params: { id: checkinButton.id },
+            });
+          }}
+        >
+          <AntDesign name="calendar" size={24} color="black" />
+        </Pressable>
+      </View>
+    </ScaleDecorator>
   );
 };
 
