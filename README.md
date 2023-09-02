@@ -16,6 +16,8 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
+- checkin discover page
+- use AgendaList instead for better event management
 - set up postgresql db ?
 - delete activity by swiping left
 - taking notes when checking in
