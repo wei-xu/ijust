@@ -2,14 +2,14 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
-import CheckinButton from "../components/checkin-button";
+import CheckinButton from "../../components/checkin-button";
 import {
   fetchAllItemsFromStorageWithKeys,
   fetchItemFromStorage,
   removeAllFromAsyncStorage,
   saveItemsToStorageWithKey,
-} from "../db/db_ops";
-import { CheckinButtonData } from "../model/checkinButtonData";
+} from "../../db/db_ops";
+import { CheckinButtonData } from "../../model/checkinButtonData";
 
 const ShortcutsScreen = (props) => {
   console.log("logging screen props, ", props);
@@ -83,13 +83,14 @@ const ShortcutsScreen = (props) => {
         options={{
           headerTitle: "I just",
           headerRight: () => (
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => router.push("add-checkin")}
-            >
-              {/* TODO change text color or use icon */}
-              <Text>{"Add"}</Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //   style={styles.addButton}
+            //   onPress={() => router.push("add-checkin")}
+            // >
+            //   {/* TODO change text color or use icon */}
+            //   <Text>{"Add"}</Text>
+            // </TouchableOpacity>
+            <Button title="Add" onPress={() => router.push("add-checkin")} />
           ),
           headerLeft: () => (
             <Button title="Delete All" onPress={removeAllFromAsyncStorage} />

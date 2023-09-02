@@ -23,6 +23,7 @@ npx create-expo-app -e with-router
 - taking notes when checking in
 - “manage" button in main page
 - animation
+- change nested import path to @
 - locate to exact checkin activities when clicking calendar
 - Details page reset to no activities every time
 - Pressable has no click effect

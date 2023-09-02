@@ -33,7 +33,7 @@ const AddCheckinButton = (props) => {
       const newCheckinButtonSer = JSON.stringify(newCheckinButton);
 
       router.push({
-        pathname: "/",
+        pathname: "/(tabs)",
         params: {
           new_checkin_button: newCheckinButtonSer,
         },
