@@ -16,23 +16,23 @@ npx create-expo-app -e with-router
 # Ijust development
 
 ## todo
-- [done] long press reordering animation feedback - add scale decorator
-- [done] save ordering after user drags and re-order the list
-- [done] added re-organize / re-order flatlist
-- Details page reset to no activities every time
-- Pressable has no click effect
-- minimum 1 hour check-in guard
-- [done] response feedback after click the button
-- animation
-- locate to exact checkin activities when clicking calendar
-- [done] color picker for new check in buttons
-- [done] calendar mark up with checked-in activities
-- [done] deletion button in detail page
+- set up postgresql db ?
 - delete activity by swiping left
 - taking notes when checking in
 - “manage" button in main page
-- [done] order checkin activities by time -- done with sort state
-- set up db ?
-- record pressing with storage/sql
-- [takeaway] passing params between pages can only be string | string []?
+- animation
+- locate to exact checkin activities when clicking calendar
+- Details page reset to no activities every time
+- Pressable has no click effect
+- minimum 1 hour check-in guard
 - enhance color picker
+- [done] long press reordering animation feedback - add scale decorator
+- [done] save ordering after user drags and re-order the list
+- [done] added re-organize / re-order flatlist
+- [done] response feedback after click the button
+- [done] color picker for new check in buttons
+- [done] calendar mark up with checked-in activities
+- [done] deletion button in detail page
+- [done] order checkin activities by time -- done with sort state
+- [done] record pressing with storage/sql
+- [takeaway] passing params between pages can only be string | string []?
