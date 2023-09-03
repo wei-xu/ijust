@@ -4,7 +4,7 @@ import {
   TabDiscoverIcon,
   TabHomeIcon,
   TabProfileIcon,
-} from "../../components/tab-home-icon";
+} from "../../components/tab-icons";
 
 const Layout = () => {
   return (
