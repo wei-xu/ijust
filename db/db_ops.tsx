@@ -86,6 +86,20 @@ export async function fetchItemFromStorage<T>(key: string): Promise<T> {
   }
 }
 
+/*
+  fetch all items from http express server for postgresql database given a key in the parameter
+*/
+export async function fetchAllItemsFromServer<T>(key: string): Promise<T[]> {
+  try {
+    const response = await fetch(`http://localhost:3000/${key}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("Error retrieving checklist items:", error);
+  }
+}
+
+
 // fetch all items from storage given the keys in the parameter
 export async function fetchAllItemsFromStorageWithKeys<T>(
   keys: string[]

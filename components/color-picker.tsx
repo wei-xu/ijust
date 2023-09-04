@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 const presetColors = [
   "#FF5733",
